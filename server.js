@@ -36,6 +36,15 @@ function readPoems() {
                     category: "kehidupan",
                     date: new Date().toISOString(),
                     views: 0
+                },
+                {
+                    id: 3,
+                    title: "Sebuah Nama",
+                    author: "Muhammad Irwan",
+                    content: "aku bercerita banyak tentang malam\nperihal bagaimana lucunya tuhan\nmengatur skenario tentang temu\nlalu tiba tiba pisah\ntentang aku yang begitu mencintai\nhingga tak mau tau lagi\njauh sebelum tuhan mempertemukanku",
+                    category: "cinta",
+                    date: new Date().toISOString(),
+                    views: 0
                 }
             ];
             fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
@@ -74,11 +83,50 @@ app.get('/api/poems/:id', (req, res) => {
             return res.status(404).json({ success: false, message: 'Puisi tidak ditemukan' });
         }
         
-        // Increment views
-        poem.views += 1;
-        writePoems(poems);
-        
         res.json({ success: true, data: poem });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Update poem & views
+app.put('/api/poems/:id', (req, res) => {
+    try {
+        const poems = readPoems();
+        const index = poems.findIndex(p => p.id === parseInt(req.params.id));
+        
+        if (index === -1) {
+            return res.status(404).json({ success: false, message: 'Puisi tidak ditemukan' });
+        }
+        
+        const { title, author, content, category } = req.body;
+        
+        // Jika tidak ada data yang dikirim, increment views
+        if (!title && !author && !content && !category) {
+            poems[index].views = (poems[index].views || 0) + 1;
+            writePoems(poems);
+            return res.json({ 
+                success: true, 
+                data: poems[index],
+                message: 'Views updated!' 
+            });
+        }
+        
+        // Update data lengkap
+        poems[index] = {
+            ...poems[index],
+            title: title || poems[index].title,
+            author: author || poems[index].author,
+            content: content || poems[index].content,
+            category: category || poems[index].category
+        };
+        
+        writePoems(poems);
+        res.json({ 
+            success: true, 
+            data: poems[index],
+            message: '✅ Puisi berhasil diupdate!' 
+        });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -120,36 +168,6 @@ app.post('/api/poems', (req, res) => {
     }
 });
 
-// Update poem
-app.put('/api/poems/:id', (req, res) => {
-    try {
-        const poems = readPoems();
-        const index = poems.findIndex(p => p.id === parseInt(req.params.id));
-        
-        if (index === -1) {
-            return res.status(404).json({ success: false, message: 'Puisi tidak ditemukan' });
-        }
-        
-        const { title, author, content, category } = req.body;
-        poems[index] = {
-            ...poems[index],
-            title: title || poems[index].title,
-            author: author || poems[index].author,
-            content: content || poems[index].content,
-            category: category || poems[index].category
-        };
-        
-        writePoems(poems);
-        res.json({ 
-            success: true, 
-            data: poems[index],
-            message: '✅ Puisi berhasil diupdate!' 
-        });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
 // Delete poem
 app.delete('/api/poems/:id', (req, res) => {
     try {
@@ -167,7 +185,7 @@ app.delete('/api/poems/:id', (req, res) => {
     }
 });
 
-// ============ ADMIN LOGIN (Simple) ============
+// ============ ADMIN LOGIN ============
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
 
