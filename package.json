@@ -1,7 +1,7 @@
 {
   "name": "ruang-aksara",
   "version": "1.0.0",
-  "description": "Website puisi dengan admin panel - deploy ke Render",
+  "description": "Website kumpulan puisi dengan admin panel",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
