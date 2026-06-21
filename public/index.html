@@ -79,7 +79,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        /* ===== POEM CARD - LEBIH BESAR ===== */
+        /* ===== POEM CARD ===== */
         .poem-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -122,11 +122,12 @@
             transform: scale(0.97);
         }
         
+        /* SEMUA ELEMENT DI DALAM CARD BISA DI KLIK - TAPI EVENT NYA DI CARD */
         .poem-card * {
-            pointer-events: none;
+            pointer-events: none; /* Biar semua klik mengarah ke card */
         }
         
-        /* ===== POEM CONTENT - PREVIEW LEBIH PANJANG ===== */
+        /* ===== POEM CONTENT - PREVIEW ===== */
         .poem-content-preview {
             font-family: 'Playfair Display', serif;
             line-height: 2.2;
@@ -141,7 +142,6 @@
             padding-right: 4px;
         }
         
-        /* ===== TAMPILAN KATEGORI & META ===== */
         .category-badge {
             padding: 0.3rem 0.9rem;
             border-radius: 20px;
@@ -174,9 +174,9 @@
             line-height: 1.3;
         }
         
-        /* ===== READ INDICATOR ===== */
+        /* ===== READ INDICATOR - TETAP BISA DIKLIK ===== */
         .read-indicator {
-            color: rgba(167, 139, 250, 0.4);
+            color: rgba(167, 139, 250, 0.5);
             font-size: 0.85rem;
             margin-top: 1rem;
             padding-top: 0.8rem;
@@ -186,13 +186,21 @@
             gap: 0.5rem;
             transition: color 0.3s ease;
             flex-shrink: 0;
+            pointer-events: none; /* Tetap pointer-events none biar klik ke card */
         }
         
         .poem-card:hover .read-indicator {
             color: #a78bfa;
         }
         
-        /* ===== ADMIN BUTTON ===== */
+        .read-indicator i {
+            transition: transform 0.3s ease;
+        }
+        
+        .poem-card:hover .read-indicator i {
+            transform: translateX(4px);
+        }
+        
         .admin-btn {
             background: linear-gradient(135deg, #7c3aed, #ec4899);
             color: white;
@@ -211,7 +219,6 @@
             box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
         }
         
-        /* ===== FLOATING PARTICLES ===== */
         .floating-particle {
             position: fixed;
             border-radius: 50%;
@@ -245,7 +252,7 @@
             color: rgba(255, 255, 255, 0.5);
         }
         
-        /* ===== MODAL / OVERLAY ===== */
+        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
