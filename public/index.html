@@ -79,18 +79,21 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        /* Poem Card - Bisa Diklik */
+        /* ===== POEM CARD - LEBIH BESAR ===== */
         .poem-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 20px;
-            padding: 1.75rem;
+            padding: 2rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
             cursor: pointer;
             user-select: none;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
         }
         
         .poem-card::before {
@@ -123,23 +126,26 @@
             pointer-events: none;
         }
         
-        /* Poem Content - Preview */
+        /* ===== POEM CONTENT - PREVIEW LEBIH PANJANG ===== */
         .poem-content-preview {
             font-family: 'Playfair Display', serif;
-            line-height: 2;
+            line-height: 2.2;
             white-space: pre-wrap;
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: #c8c8c8;
-            max-height: 130px;
+            max-height: 280px;
             overflow: hidden;
-            mask-image: linear-gradient(to bottom, black 45%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 100%);
+            flex: 1;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            padding-right: 4px;
         }
         
+        /* ===== TAMPILAN KATEGORI & META ===== */
         .category-badge {
-            padding: 0.25rem 0.85rem;
+            padding: 0.3rem 0.9rem;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             background: rgba(124, 58, 237, 0.15);
             color: #a78bfa;
@@ -150,7 +156,7 @@
         .author-name {
             color: #a78bfa;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
         
         .date-text {
@@ -159,6 +165,34 @@
             font-weight: 300;
         }
         
+        .poem-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.3rem;
+            line-height: 1.3;
+        }
+        
+        /* ===== READ INDICATOR ===== */
+        .read-indicator {
+            color: rgba(167, 139, 250, 0.4);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .poem-card:hover .read-indicator {
+            color: #a78bfa;
+        }
+        
+        /* ===== ADMIN BUTTON ===== */
         .admin-btn {
             background: linear-gradient(135deg, #7c3aed, #ec4899);
             color: white;
@@ -177,6 +211,7 @@
             box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
         }
         
+        /* ===== FLOATING PARTICLES ===== */
         .floating-particle {
             position: fixed;
             border-radius: 50%;
@@ -210,7 +245,7 @@
             color: rgba(255, 255, 255, 0.5);
         }
         
-        /* Modal / Overlay */
+        /* ===== MODAL / OVERLAY ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -339,20 +374,6 @@
             font-size: 0.85rem;
         }
         
-        .read-indicator {
-            color: rgba(167, 139, 250, 0.4);
-            font-size: 0.8rem;
-            margin-top: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.3s ease;
-        }
-        
-        .poem-card:hover .read-indicator {
-            color: #a78bfa;
-        }
-        
         .modal-content::-webkit-scrollbar {
             width: 4px;
         }
@@ -389,7 +410,15 @@
         
         @media (max-width: 768px) {
             .poem-card {
-                padding: 1.25rem !important;
+                padding: 1.5rem !important;
+                min-height: 280px;
+            }
+            .poem-title {
+                font-size: 1.2rem;
+            }
+            .poem-content-preview {
+                font-size: 0.95rem;
+                max-height: 200px;
             }
             .modal-content {
                 padding: 1.5rem;
@@ -404,6 +433,20 @@
             .modal-poem-meta {
                 gap: 0.5rem;
                 font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .poem-card {
+                padding: 1.25rem !important;
+                min-height: 240px;
+            }
+            .poem-content-preview {
+                max-height: 150px;
+                font-size: 0.9rem;
+            }
+            .poem-title {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -548,9 +591,7 @@
                             </span>
                         </div>
                         
-                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1" style="font-family: 'Playfair Display', serif;">
-                            ${escapeHtml(poem.title)}
-                        </h3>
+                        <h3 class="poem-title">${escapeHtml(poem.title)}</h3>
                         <p class="author-name text-sm mb-3">
                             <i class="fas fa-user mr-2"></i>${escapeHtml(poem.author)}
                         </p>
