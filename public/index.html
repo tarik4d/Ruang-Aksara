@@ -79,7 +79,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        /* ===== POEM CARD ===== */
+        /* ===== POEM CARD - DENGAN CURSOR POINTER ===== */
         .poem-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -90,7 +90,6 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
-            user-select: none;
             min-height: 320px;
             display: flex;
             flex-direction: column;
@@ -122,9 +121,10 @@
             transform: scale(0.97);
         }
         
-        /* SEMUA ELEMENT DI DALAM CARD BISA DI KLIK - TAPI EVENT NYA DI CARD */
+        /* ===== SEMUA ELEMEN BISA DI KLIK ===== */
         .poem-card * {
-            pointer-events: none; /* Biar semua klik mengarah ke card */
+            pointer-events: auto !important; /* Penting: biar semua bisa diklik */
+            cursor: pointer;
         }
         
         /* ===== POEM CONTENT - PREVIEW ===== */
@@ -151,6 +151,7 @@
             color: #a78bfa;
             border: 1px solid rgba(124, 58, 237, 0.15);
             letter-spacing: 0.3px;
+            pointer-events: none !important; /* Biar ga nge-block klik */
         }
         
         .author-name {
@@ -174,9 +175,9 @@
             line-height: 1.3;
         }
         
-        /* ===== READ INDICATOR - TETAP BISA DIKLIK ===== */
+        /* ===== READ INDICATOR - JADI TOMBOL ===== */
         .read-indicator {
-            color: rgba(167, 139, 250, 0.5);
+            color: rgba(167, 139, 250, 0.6);
             font-size: 0.85rem;
             margin-top: 1rem;
             padding-top: 0.8rem;
@@ -184,12 +185,12 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
             flex-shrink: 0;
-            pointer-events: none; /* Tetap pointer-events none biar klik ke card */
+            pointer-events: auto !important;
         }
         
-        .poem-card:hover .read-indicator {
+        .read-indicator:hover {
             color: #a78bfa;
         }
         
@@ -584,8 +585,7 @@
                 
                 container.innerHTML = allPoems.map((poem, index) => `
                     <div class="poem-card fade-in" style="animation-delay: ${index * 0.08}s" 
-                         data-id="${poem.id}" 
-                         onclick="openModal('${poem.id}')">
+                         data-id="${poem.id}">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex items-center space-x-2">
                                 <span class="category-badge">${getCategoryIcon(poem.category)}</span>
@@ -607,12 +607,38 @@
                             ${escapeHtml(poem.content)}
                         </div>
                         
-                        <div class="read-indicator">
+                        <div class="read-indicator" data-id="${poem.id}">
                             <i class="fas fa-chevron-right"></i>
                             <span>Klik untuk membaca</span>
                         </div>
                     </div>
                 `).join('');
+                
+                // ===== ATTACH EVENT LISTENER KE SEMUA CARD =====
+                document.querySelectorAll('.poem-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        // Cari ID dari card atau dari read-indicator
+                        let id = this.dataset.id;
+                        if (!id) {
+                            const indicator = this.querySelector('.read-indicator');
+                            if (indicator) id = indicator.dataset.id;
+                        }
+                        if (id) {
+                            openModal(id);
+                        }
+                    });
+                });
+                
+                // ===== ATTACH EVENT LISTENER KE READ-INDICATOR =====
+                document.querySelectorAll('.read-indicator').forEach(indicator => {
+                    indicator.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Mencegah event bubbling
+                        const id = this.dataset.id;
+                        if (id) {
+                            openModal(id);
+                        }
+                    });
+                });
                 
             } catch (error) {
                 console.error('Error:', error);
